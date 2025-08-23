@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}JAFSA - Person Registration{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #FFD700;
+            --secondary-color: #FFA500;
+            --accent-color: #000000;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --warning-color: #ffc107;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: -1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 580px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-heavy);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 20px 20px 0 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            box-shadow: var(--shadow-light);
+            transition: var(--transition);
+            border: 3px solid var(--primary-color);
+            background: white;
+            padding: 5px;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .company-name {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+            background: linear-gradient(45deg, var(--accent-color), var(--text-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: var(--text-light);
+            font-weight: 400;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .form-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .form-subtitle {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+            background: #fafbfc;
+            color: var(--text-dark);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-group input:valid {
+            border-color: var(--success-color);
+        }
+
+        .form-group input:invalid:not(:focus):not(:placeholder-shown) {
+            border-color: var(--error-color);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px 24px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--accent-color);
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(255, 215, 0, 0.4);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-btn.loading::after {
+            content: "";
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid var(--accent-color);
+            border-radius: 50%;
+            display: inline-block;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            margin: 8% auto;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: slideInDown 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            border-top: 5px solid var(--success-color);
+        }
+
+        .modal-content.error {
+            border-top-color: var(--error-color);
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close:hover {
+            color: #333;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-content h3 {
+            color: var(--success-color);
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .modal-content.error h3 {
+            color: var(--error-color);
+        }
+
+        .modal-content p {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+
+        .saved-data {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin: 25px 0;
+            border-left: 4px solid var(--success-color);
+            box-shadow: var(--shadow-light);
+        }
+
+        .data-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 14px;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .data-item:last-child {
+            border-bottom: none;
+        }
+
+        .data-item strong {
+            color: var(--accent-color);
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        .data-value {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .ok-btn {
+            display: block;
+            margin: 25px auto 0;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, var(--success-color), #20c997);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+            min-width: 120px;
+        }
+
+        .modal-content.error .ok-btn {
+            background: linear-gradient(135deg, var(--error-color), #c82333);
+        }
+
+        .ok-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .modal-content.error .ok-btn:hover {
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        /* Form animations */
+        .form-group {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 40px 30px;
+                margin: 0 15px;
+                border-radius: 15px;
+            }
+            
+            .company-name {
+                font-size: 28px;
+            }
+            
+            .logo {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .modal-content {
+                margin: 15% auto;
+                padding: 30px 25px;
+            }
+            
+            .data-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .data-item strong {
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .company-name {
+                font-size: 24px;
+            }
+            
+            .form-title {
+                font-size: 20px;
+            }
+        }
+
+        /* Input field icons */
+        .input-icon {
+            position: relative;
+        }
+
+        .input-icon::before {
+            content: '';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text-light);
+            font-size: 12px;
+        }
+
+        /* Success animation */
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--success-color);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bounceIn 0.6s ease;
+        }
+
+        .error-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--error-color);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bounceIn 0.6s ease;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.25);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <div class="header">
+                <div class="logo-container">
+                    <img src="{% static 'images/Jafsa_bakes.png' %}" alt="JAFSA Logo" class="logo">
+                </div>
+                <h1 class="company-name">JAFSA</h1>
+                <p class="tagline">The Sweet Stories</p>
+                <h2 class="form-title">Person Registration</h2>
+                <p class="form-subtitle">Please fill in your details below</p>
+            </div>
+            
+            <form id="personForm" method="post" action="{% url 'save_person' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="place">Place</label>
+                    <input type="text" id="place" name="place" required placeholder="Enter your place">
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact_number">Contact Number</label>
+                    <input type="tel" id="contact_number" name="contact_number" required placeholder="Enter your contact number">
+                </div>
+                
+                <div class="form-group">
+                    <label for="date_of_birth">Date of Birth</label>
+                    <input type="date" id="date_of_birth" name="date_of_birth" required>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="submit-btn">Register Now</button>
+                </div>
+            </form>
+            
+            <div class="footer-text">
+                <p>&copy; 2024 JAFSA - The Sweet Stories. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="success-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 6L9 17L4 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h3>Registration Successful!</h3>
+            <p id="successMessage">Your information has been saved successfully!</p>
+            <div id="savedData" class="saved-data">
+                <!-- Saved data will be displayed here -->
+            </div>
+            <button id="okBtn" class="ok-btn">Continue</button>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content error">
+            <span class="close">&times;</span>
+            <div class="error-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h3>Registration Failed!</h3>
+            <p id="errorMessage">Something went wrong!</p>
+            <button id="errorOkBtn" class="ok-btn">Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        // CSRF token for Django
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+
+        // Add loading animation to submit button
+        function showLoading(show = true) {
+            const submitBtn = document.querySelector('.submit-btn');
+            if (show) {
+                submitBtn.classList.add('loading');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Registering...';
+            } else {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Register Now';
+            }
+        }
+
+        document.getElementById('personForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading animation
+            showLoading(true);
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                place: document.getElementById('place').value,
+                contact_number: document.getElementById('contact_number').value,
+                date_of_birth: document.getElementById('date_of_birth').value
+            };
+
+            fetch('{% url "save_person" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                showLoading(false);
+                
+                if (data.status === 'success') {
+                    showSuccessModal(data);
+                    document.getElementById('personForm').reset();
+                } else {
+                    showErrorModal(data.message || 'Registration failed. Please try again.');
+                }
+            })
+            .catch(error => {
+                showLoading(false);
+                console.error('Error:', error);
+                showErrorModal('Network error occurred. Please check your connection and try again.');
+            });
+        });
+
+        function showSuccessModal(data) {
+            const modal = document.getElementById('successModal');
+            const savedData = document.getElementById('savedData');
+            
+            // Format date for better display
+            const createdDate = new Date(data.data.created_at).toLocaleString();
+            const birthDate = new Date(data.data.date_of_birth).toLocaleDateString();
+            
+            savedData.innerHTML = `
+                <div class="data-item">
+                    <strong>Registration ID:</strong>
+                    <span class="data-value">${data.data.id}</span>
+                </div>
+                <div class="data-item">
+                    <strong>Name:</strong>
+                    <span class="data-value">${data.data.name}</span>
+                </div>
+                <div class="data-item">
+                    <strong>Place:</strong>
+                    <span class="data-value">${data.data.place}</span>
+                </div>
+                <div class="data-item">
+                    <strong>Contact:</strong>
+                    <span class="data-value">${data.data.contact_number}</span>
+                </div>
+                <div class="data-item">
+                    <strong>Date of Birth:</strong>
+                    <span class="data-value">${birthDate}</span>
+                </div>
+                <div class="data-item">
+                    <strong>Registered At:</strong>
+                    <span class="data-value">${createdDate}</span>
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+        }
+
+        function showErrorModal(message) {
+            const modal = document.getElementById('errorModal');
+            document.getElementById('errorMessage').textContent = message;
+            modal.style.display = 'block';
+        }
+
+        // Close modal functionality
+        document.querySelectorAll('.close, .ok-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                document.getElementById('successModal').style.display = 'none';
+                document.getElementById('errorModal').style.display = 'none';
+            });
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const successModal = document.getElementById('successModal');
+            const errorModal = document.getElementById('errorModal');
+            
+            if (event.target === successModal) {
+                successModal.style.display = 'none';
+            }
+            if (event.target === errorModal) {
+                errorModal.style.display = 'none';
+            }
+        });
+
+        // Enhanced form validation
+        document.querySelectorAll('input[required]').forEach(input => {
+            input.addEventListener('blur', function() {
+                validateField(this);
+            });
+
+            input.addEventListener('input', function() {
+                if (this.classList.contains('error')) {
+                    validateField(this);
+                }
+            });
+        });
+
+        function validateField(field) {
+            if (field.value.trim() === '') {
+                field.style.borderColor = 'var(--error-color)';
+                field.classList.add('error');
+            } else {
+                field.style.borderColor = 'var(--success-color)';
+                field.classList.remove('error');
+            }
+        }
+
+        // Phone number validation
+        document.getElementById('contact_number').addEventListener('input', function() {
+            // Allow only numbers, spaces, hyphens, plus sign, and parentheses
+            this.value = this.value.replace(/[^0-9\s\-\+\(\)]/g, '');
+        });
+
+        // Name field - only letters and spaces
+        document.getElementById('name').addEventListener('input', function() {
+            this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+        });
+
+        // Auto-focus first field when page loads
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('name').focus();
+            }, 500);
+        });
+
+        // Add smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+    </script>
+</body>
+</html>
