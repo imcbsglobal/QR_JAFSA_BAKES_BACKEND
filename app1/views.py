@@ -1,3 +1,4 @@
+# views.py
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -14,11 +15,11 @@ def index(request):
 def save_person(request):
     try:
         data = json.loads(request.body)
-        
-        # Parse the date string to a date object
+
+        # Parse date
         date_of_birth = datetime.strptime(data['date_of_birth'], '%Y-%m-%d').date()
-        
-        # Create new person instance
+
+        # Save to DB
         person = Person(
             name=data['name'],
             place=data['place'],
@@ -26,7 +27,7 @@ def save_person(request):
             date_of_birth=date_of_birth
         )
         person.save()
-        
+
         return JsonResponse({
             'status': 'success',
             'message': 'Data saved successfully!',
@@ -39,14 +40,30 @@ def save_person(request):
                 'created_at': person.created_at.strftime('%Y-%m-%d %H:%M:%S')
             }
         })
-    
+
     except ValueError as ve:
-        return JsonResponse({
-            'status': 'error',
-            'message': f'Invalid date format: {str(ve)}'
-        }, status=400)
+        return JsonResponse({'status': 'error', 'message': f'Invalid date format: {ve}'}, status=400)
     except Exception as e:
-        return JsonResponse({
-            'status': 'error',
-            'message': f'Error saving data: {str(e)}'
-        }, status=400)
+        return JsonResponse({'status': 'error', 'message': f'Error saving data: {e}'}, status=400)
+
+
+
+
+
+
+
+
+
+
+
+
+
+# http://127.0.0.1:8000/save-person/
+
+
+# {
+#   "name": "John Doe",
+#   "place": "Pathanamthitta",
+#   "contact_number": "9876543210",
+#   "date_of_birth": "1995-05-20"
+# }
