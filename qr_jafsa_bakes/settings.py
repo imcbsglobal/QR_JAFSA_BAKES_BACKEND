@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-095-@w@uj8jf+wt(z&z^6*porklnkm@so0pzm05cxi^d8$r#83
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False  # Set to False for production
 
-ALLOWED_HOSTS = ["qr.jafsabakes.in", "www.qr.jafsabakes.in", "127.0.0.1"]
+ALLOWED_HOSTS = ["qrbackend.jafsabakes.in", "www.qrbackend.jafsabakes.in", "127.0.0.1"]
 
 # Application definition
 INSTALLED_APPS = [
