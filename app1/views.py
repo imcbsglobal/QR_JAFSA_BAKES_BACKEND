@@ -67,3 +67,36 @@ def save_person(request):
 #   "contact_number": "9876543210",
 #   "date_of_birth": "1995-05-20"
 # }
+
+
+
+@require_http_methods(["GET"])
+def get_all_persons(request):
+    try:
+        # Get all persons from database
+        persons = Person.objects.all().order_by('-created_at')  # Order by newest first
+        
+        # Convert to list of dictionaries
+        persons_data = []
+        for person in persons:
+            persons_data.append({
+                'id': person.id,
+                'name': person.name,
+                'place': person.place,
+                'contact_number': person.contact_number,
+                'date_of_birth': person.date_of_birth.strftime('%Y-%m-%d'),
+                'created_at': person.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            })
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': f'Retrieved {len(persons_data)} persons successfully!',
+            'count': len(persons_data),
+            'data': persons_data
+        })
+    
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error', 
+            'message': f'Error retrieving data: {e}'
+        }, status=500)
